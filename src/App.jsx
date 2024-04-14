@@ -1,30 +1,37 @@
 import React from 'react';
 import Body from "./components/Body.jsx";
 import FtAppBar from "./components/FtAppBar.jsx";
-import MyDialog from "./components/MyDialog.jsx";
+import DialogLogin from "./components/DialogLogin.jsx";
 import {UserContext} from "./utils/userContext.js";
+import DialogRegistration from "./components/DialogRegistration.jsx";
+import UserProfile from "./utils/UserProfile.js";
+import {testUser, testUserOn} from "./utils/constants.js";
 
 
 const App = () => {
 
-    const [openDialog, handleDisplay] = React.useState(false);
-
-    const handleClose = () => {
-        handleDisplay(false);
-    };
+    const [userProfile, setUserProfile] = React.useState(
+        new UserProfile(testUserOn ? testUser : null));
+    const [dialogLogin, handleDialogLogin] = React.useState(false);
+    const [dialogRegistration, handleDialogRegistration] = React.useState(false);
 
 
     return (
 
         <UserContext.Provider value={{
-            openDialog,
-            handleDisplay,
+            userProfile,
+            setUserProfile,
+            dialogLogin,
+            handleDialogLogin,
+            dialogRegistration,
+            handleDialogRegistration
         }}>
 
             <div>
                 <FtAppBar/>
                 <Body/>
-                <MyDialog/>
+                {dialogLogin && <DialogLogin/>}
+                {dialogRegistration && <DialogRegistration/>}
             </div>
 
         </UserContext.Provider>
