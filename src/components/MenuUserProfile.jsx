@@ -7,7 +7,7 @@ import User from "../utils/User.js";
 
 
 const MenuUserProfile = ({subMenu, setSubMenu, handleClick}) => {
-    const {userProfile, setUserProfile} = useContext(UserContext);
+    const {userProfile, setUserProfile, handleDialogProfile} = useContext(UserContext);
 
     return (
         <div className={".barSubMenu"}>
@@ -70,6 +70,17 @@ const MenuUserProfile = ({subMenu, setSubMenu, handleClick}) => {
                 </MenuItem>
 
                 <Divider sx={{ borderColor: "white"}}/>
+
+                <MenuItem
+                    onClick={() => {
+                        handleDialogProfile(true);
+                    }
+                    }>
+                    {/*<ListItemIcon>*/}
+                    {/*    <LogoutIcon fontSize="small" sx={{color: "white"}}/>*/}
+                    {/*</ListItemIcon>*/}
+                    <Typography variant="inherit">Edit profile</Typography>
+                </MenuItem>
 
                 <MenuItem
                     onClick={() => {

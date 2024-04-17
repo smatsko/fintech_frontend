@@ -8,6 +8,8 @@ import {fetchUser} from "../utils/accountActions.js";
 import MyEmailField, {checkEMail} from "./MyEmailField.jsx";
 import MyPasswordField, {checkPassword} from "./MyPasswordField.jsx";
 import CloseIcon from '@mui/icons-material/Close';
+import DialogHeader, {dialogPaperProps} from "./dialogCommon.jsx";
+import {createToken} from "../utils/constants.js";
 
 const DialogLogin = () => {
 
@@ -66,7 +68,7 @@ const DialogLogin = () => {
                     })
                 })
             .then(res => {
-                setUserProfile( {user: res})
+                setUserProfile( { token: createToken(formFields.login, formFields.password), user: res });
                 onFormClose();
             })
             .catch(e => {
@@ -82,50 +84,12 @@ const DialogLogin = () => {
 
     return (
         <Dialog
-            PaperProps={{
-                style: {
-                    backgroundColor: "#383393",
-                    boxShadow: "none",
-                    borderRadius: 10,
-                    color: "white"
-                },
-            }}
+            PaperProps={dialogPaperProps}
             sx={{alignItems: "center", color: "white"}}
             onClose={() => onFormClose()}
             open={dialogLogin}
         >
-
-            <Box
-                component="div"
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'horizontal',
-                    justifyContent: 'center',
-                    width: '35ch',
-                }}
-            >
-                <Box
-                    component="img"
-                    sx={{m: 1}}
-                    alt=">>"
-                    src={Glyph}
-                />
-
-                <DialogTitle sx={{alignSelf: "center"}}>Enter to account </DialogTitle>
-                <IconButton sx={{
-                    color: "#d2508f",
-                    backgroundColor: "#555393",
-                    borderRadius: "0",
-                    width: "10px",
-                    height: "10px",
-                    margin: "5px"
-                }}
-                            onClick={() => onFormClose()}
-                >
-                    <CloseIcon/>
-                </IconButton>
-
-            </Box>
+            <DialogHeader title={"Enter to account"} onFormClose={onFormClose}/>
 
             <Box component="form"
                 onSubmit={submitHandler}
@@ -133,12 +97,13 @@ const DialogLogin = () => {
                     display: 'flex',
                     flexDirection: 'horizontal',
                     justifyContent: 'center',
-                    width: '35ch',
+                    width: '98%',
                     backgroundColor: "white"
                 }}
                 noValidate
                 autoComplete="on"
             >
+
 
 
                 <Stack sx={{m: 2, width: '30ch'}}>
@@ -166,6 +131,7 @@ const DialogLogin = () => {
                         {formError ? formError : ""} </FormHelperText>
 
                 </Stack>
+
 
             </Box>
 

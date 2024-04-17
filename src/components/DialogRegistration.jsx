@@ -1,4 +1,4 @@
-import React, {useContext,  useState} from 'react';
+import React, {useContext, useState} from 'react';
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
 import {UserContext} from "../utils/userContext.js";
@@ -9,6 +9,7 @@ import MyTextField1 from "./MyTextField1.jsx";
 import MyEmailField, {checkEMail} from "./MyEmailField.jsx";
 import MyPasswordField, {checkPassword} from "./MyPasswordField.jsx";
 import CloseIcon from '@mui/icons-material/Close';
+import DialogHeader, {dialogPaperProps} from "./dialogCommon.jsx";
 
 
 const DialogRegistration = () => {
@@ -74,7 +75,7 @@ const DialogRegistration = () => {
                 }
             )
             .then(res => {
-                setUserProfile( {user: res});
+                setUserProfile({user: res});
                 onFormClose();
             })
             .catch(e => {
@@ -87,56 +88,16 @@ const DialogRegistration = () => {
             });
     }
 
+
     return (
         <Dialog
-            PaperProps={{
-                style: {
-                    backgroundColor: "#383393",
-                    boxShadow: "none",
-                    borderRadius: 10,
-                    color: "white"
-                },
-            }}
+            PaperProps={dialogPaperProps}
             sx={{alignItems: "center", color: "white"}}
             onClose={() => onFormClose()}
             open={dialogRegistration}
         >
 
-            <Box
-                component="div"
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'horizontal',
-                    justifyContent: 'center',
-                    width: '35ch',
-                }}
-            >
-                <Box
-                    component="img"
-                    sx={{m: 1}}
-                    alt=">>"
-                    src={Glyph}
-                />
-
-                <DialogTitle sx={{alignSelf: "center"}}>Registration form</DialogTitle>
-
-
-                <IconButton sx={{
-                    color: "#d2508f",
-                    backgroundColor: "#555393",
-                    borderRadius: "0",
-                    width: "10px",
-                    height: "10px",
-                    margin: "5px"
-                }}
-                            onClick={() => onFormClose()}
-                    //onMouseDown={handleMouseDownPassword}
-                >
-                    <CloseIcon/>
-
-                </IconButton>
-
-            </Box>
+            <DialogHeader title="Registration form" onFormClose={onFormClose}/>
 
             <Box component="form"
                  onSubmit={submitHandler}
@@ -163,11 +124,11 @@ const DialogRegistration = () => {
                     <MyPasswordField xName="password" xLabel={"Password"} xFormFields={formFields}
                                      xOnChange={handleFieldsChange} xOnBlur={handleOnBlur}
                                      xSetShowPassword={setShowPassword} xShowPassword={showPassword}
-                                     xCheckNameValue={""}/>
+                                     xCheckNameValue={""} xCheckPassword={true}/>
                     <MyPasswordField xName="passwordagain" xLabel={"Password again"} xFormFields={formFields}
                                      xOnChange={handleFieldsChange} xOnBlur={handleOnBlur}
                                      xSetShowPassword={setShowPasswordAgain} xShowPassword={showPasswordAgain}
-                                     xCheckNameValue="password"/>
+                                     xCheckNameValue="password" xCheckPassword={true}/>
 
                     <div align={"center"}>
                         <Button
@@ -181,7 +142,8 @@ const DialogRegistration = () => {
                     </div>
 
 
-                    <FormHelperText id="form-helper" error={true} sx={{width: "90%", alignSelf: "center", textAlign: "center"}}>
+                    <FormHelperText id="form-helper" error={true}
+                                    sx={{width: "90%", alignSelf: "center", textAlign: "center"}}>
                         {formError ? formError : ""} </FormHelperText>
 
                 </Stack>

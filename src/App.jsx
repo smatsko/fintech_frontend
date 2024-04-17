@@ -6,6 +6,8 @@ import {UserContext} from "./utils/userContext.js";
 import DialogRegistration from "./components/DialogRegistration.jsx";
 import UserProfile from "./utils/UserProfile.js";
 import {testUser, testUserOn} from "./utils/constants.js";
+import DialogProfile from "./components/DialogProfile.jsx";
+import DialogCommon from "./components/dialogCommon.jsx";
 
 
 const App = () => {
@@ -14,6 +16,8 @@ const App = () => {
         new UserProfile(testUserOn ? testUser : null));
     const [dialogLogin, handleDialogLogin] = React.useState(false);
     const [dialogRegistration, handleDialogRegistration] = React.useState(false);
+    const [dialogProfile, handleDialogProfile] = React.useState(false);
+
 
 
     return (
@@ -24,7 +28,9 @@ const App = () => {
             dialogLogin,
             handleDialogLogin,
             dialogRegistration,
-            handleDialogRegistration
+            handleDialogRegistration,
+            handleDialogProfile,
+            dialogProfile
         }}>
 
             <div>
@@ -32,6 +38,7 @@ const App = () => {
                 <Body/>
                 {dialogLogin && <DialogLogin/>}
                 {dialogRegistration && <DialogRegistration/>}
+                {dialogProfile && <DialogProfile/>}
             </div>
 
         </UserContext.Provider>

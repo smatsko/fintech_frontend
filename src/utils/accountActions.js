@@ -28,3 +28,15 @@ export const changePassword = (login, oldPassword, newPassword) => {
         }
     })
 }
+
+
+export const updateUser = (login, token,  fields) => {
+    return fetch(`${baseUrl}/user/${login}`, {
+        method: 'Put',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token
+        },
+        body: JSON.stringify(fields)
+    })
+}

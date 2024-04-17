@@ -10,7 +10,7 @@ export const checkPassword = pass => {
 
 const MyPasswordField = ({
                              xName, xLabel, xFormFields, xOnChange, xOnBlur,
-                             xShowPassword, xSetShowPassword, xCheckNameValue
+                             xShowPassword, xSetShowPassword, xCheckNameValue, xCheckPassword
                          }) => {
 
 
@@ -39,7 +39,7 @@ const MyPasswordField = ({
                 value={xFormFields[xName] ? xFormFields[xName] : ""}
                 onChange={handleOnChange}
                 onBlur={xOnBlur}
-                error={(xName in xFormFields) && !checkPassword(xFormFields[xName])}
+                error={ xCheckPassword && (xName in xFormFields) && !checkPassword(xFormFields[xName])}
                 endAdornment={
                     <InputAdornment position="end">
                         <IconButton
@@ -58,7 +58,7 @@ const MyPasswordField = ({
                       && ( !( xName in xFormFields)
                            || xFormFields[xName] !== xFormFields[xCheckNameValue]) ?
                          "Passwords doesn't match" : ""
-                    : (xName in xFormFields) && !checkPassword(xFormFields[xName]) ? "At least 8 symbols" : ""}
+                    : xCheckPassword && (xName in xFormFields) && !checkPassword(xFormFields[xName]) ? "At least 8 symbols" : ""}
             </FormHelperText>
 
         </FormControl>
