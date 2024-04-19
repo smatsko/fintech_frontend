@@ -8,6 +8,9 @@ import UserProfile from "./utils/UserProfile.js";
 import {testUser, testUserOn} from "./utils/constants.js";
 import DialogProfile from "./components/DialogProfile.jsx";
 import DialogCommon from "./components/dialogCommon.jsx";
+import Proba from "./components/Proba.jsx";
+import Main from "./components/Main.jsx";
+import FtBottomNavigation from "./components/FtBottomNavigation.jsx";
 
 
 const App = () => {
@@ -17,7 +20,6 @@ const App = () => {
     const [dialogLogin, handleDialogLogin] = React.useState(false);
     const [dialogRegistration, handleDialogRegistration] = React.useState(false);
     const [dialogProfile, handleDialogProfile] = React.useState(false);
-
 
 
     return (
@@ -35,7 +37,8 @@ const App = () => {
 
             <div>
                 <FtAppBar/>
-                <Body/>
+                <Main/>
+                <FtBottomNavigation/>
                 {dialogLogin && <DialogLogin/>}
                 {dialogRegistration && <DialogRegistration/>}
                 {dialogProfile && <DialogProfile/>}

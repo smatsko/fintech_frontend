@@ -1,9 +1,11 @@
 import React from 'react';
+import {Typography} from "@mui/material";
 
 const Content = () => {
-    return (
-        <div className={"content"}>
-            main content here
+
+    return(
+    <div>
+
         </div>
     );
 };

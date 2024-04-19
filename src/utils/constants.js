@@ -1,6 +1,6 @@
 import User from "./User.js";
 
-export const testUserOn = false;
+export const testUserOn = true;
 export const testUser = new User ("test@test.ru", "1234", "Piter", "Smith");
 
 //export const baseUrl = 'https://webaccounting.herokuapp.com/account'
