@@ -1,5 +1,4 @@
 import React from 'react';
-import Body from "./components/Body.jsx";
 import FtAppBar from "./components/FtAppBar.jsx";
 import DialogLogin from "./components/DialogLogin.jsx";
 import {UserContext} from "./utils/userContext.js";
@@ -7,14 +6,12 @@ import DialogRegistration from "./components/DialogRegistration.jsx";
 import UserProfile from "./utils/UserProfile.js";
 import {testUser, testUserOn} from "./utils/constants.js";
 import DialogProfile from "./components/DialogProfile.jsx";
-import DialogCommon from "./components/dialogCommon.jsx";
-import Proba from "./components/Proba.jsx";
 import Main from "./components/Main.jsx";
 import FtBottomNavigation from "./components/FtBottomNavigation.jsx";
 
 
 const App = () => {
-
+``
     const [userProfile, setUserProfile] = React.useState(
         new UserProfile(testUserOn ? testUser : null));
     const [dialogLogin, handleDialogLogin] = React.useState(false);
