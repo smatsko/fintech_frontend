@@ -1,11 +1,16 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Route, Routes} from "react-router-dom";
 import Body from "./Body.jsx";
 import Contacts from "./Contacts.jsx";
 import Statistics from "./Statistics.jsx";
 import Analytics from "./Analytics.jsx";
+import {UserContext} from "../utils/userContext.js";
 
 const Main = () => {
+    const {
+        userProfile
+    } = useContext(UserContext);
+    console.log(userProfile);
     return (
         <Routes>
             <Route keys="statistics" path="/statistics" element={<Statistics/>}/>

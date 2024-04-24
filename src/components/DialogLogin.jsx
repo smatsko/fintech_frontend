@@ -58,7 +58,6 @@ const DialogLogin = () => {
     const submitHandler = (e) => {
         e.preventDefault();
         setEnableOk(false)
-
         fetchUser(formFields.login, formFields.password)
             .then(
                 response => {

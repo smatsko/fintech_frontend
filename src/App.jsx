@@ -12,8 +12,13 @@ import FtBottomNavigation from "./components/FtBottomNavigation.jsx";
 
 const App = () => {
 ``
-    const [userProfile, setUserProfile] = React.useState(
+   const [userProfile, setUserProfile] = React.useState(
         new UserProfile(testUserOn ? testUser : null));
+
+
+
+
+
     const [dialogLogin, handleDialogLogin] = React.useState(false);
     const [dialogRegistration, handleDialogRegistration] = React.useState(false);
     const [dialogProfile, handleDialogProfile] = React.useState(false);
