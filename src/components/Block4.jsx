@@ -20,7 +20,7 @@ const Block4 = ({text1, text2, text3, text4, text5, text6, text7}) => {
         }}>
             <Typography sx={{fontSize: "48px"}}> {text1} </Typography>
             <Typography sx={{fontSize: "20px", mt: 2}}> {text2} </Typography>
-            <Typography sx={{fontSize: "16px", mt: 2}}> Currency in USD </Typography>
+            <Typography sx={{fontSize: "16px", mt: 1}}> Currency in USD </Typography>
             <Typography sx={{fontSize: "16px", opacity: "0.6", fontWeight: "400", mt: 3}}> {text3} </Typography>
             <Stack direction="row" sx={{mt: 2}}>
                 <Typography sx={{fontSize: "58px", color: "#D45190", fontWeight: "600"}}> {text4} &nbsp;</Typography>

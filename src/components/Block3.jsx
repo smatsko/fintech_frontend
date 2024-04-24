@@ -3,7 +3,6 @@ import {
     Typography
 } from "@mui/material";
 import {GraphDemo} from "../utils/constants.js";
-import Map from "../images/map.png";
 import React from "react";
 
 
@@ -38,33 +37,12 @@ const Block3 = () => {
                 <Typography >&nbsp;</Typography>
             </Box>
 
-
             <Box component="div" sx={{p:0}}>
                 <Box component={"img"} src={GraphDemo}  sx={{m:0, p:0, width:"100%"}}/>
             </Box>
 
-
         </Box>
-
-
-        /* <AppBar position="static" sx={{background: "#04031C", height:"100%"}}>
-             <Toolbar>
-
-
-             </Toolbar>
-         </AppBar>*/
-
-
-        /* <Grid justifyContent={"center"} sx={{background:"blue"}}>
-            <Grid item xs={9} sx={{background: "red"}}>
-                <Typography xs={11}>APPL</Typography>
-            </Grid>
-            <Grid item xs={2} sx={{background: "green"}}>
-                dsfsfsda
-            </Grid>
-        </Grid>*/
-    )
-        ;
+    );
 };
 
 export default Block3;

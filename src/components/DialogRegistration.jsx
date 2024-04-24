@@ -10,6 +10,7 @@ import MyEmailField, {checkEMail} from "./MyEmailField.jsx";
 import MyPasswordField, {checkPassword} from "./MyPasswordField.jsx";
 import CloseIcon from '@mui/icons-material/Close';
 import DialogHeader, {dialogPaperProps} from "./dialogCommon.jsx";
+import {t} from "../utils/constants.js";
 
 
 const DialogRegistration = () => {
@@ -68,6 +69,7 @@ const DialogRegistration = () => {
         registerUser(tmp)
             .then(
                 response => {
+                    t(response);
                     if (response.ok) return response.json();
                     return response.json().then(response => {
                         throw new Error(response.status);

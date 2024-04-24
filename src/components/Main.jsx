@@ -10,7 +10,6 @@ const Main = () => {
     const {
         userProfile
     } = useContext(UserContext);
-    console.log(userProfile);
     return (
         <Routes>
             <Route keys="statistics" path="/statistics" element={<Statistics/>}/>
