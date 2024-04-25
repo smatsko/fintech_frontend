@@ -10,6 +10,7 @@ import MyPasswordField, {checkPassword} from "./MyPasswordField.jsx";
 import CloseIcon from '@mui/icons-material/Close';
 import DialogHeader, {dialogPaperProps} from "./dialogCommon.jsx";
 import {createToken, t} from "../utils/constants.js";
+import {useNavigate} from "react-router-dom";
 
 const DialogLogin = () => {
 
@@ -54,6 +55,7 @@ const DialogLogin = () => {
         if (formError) setFormError("");
     };
 
+    let navigate = useNavigate()
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -70,6 +72,8 @@ const DialogLogin = () => {
             .then(res => {
                 setUserProfile( { token: createToken(formFields.login, formFields.password), user: res });
                 onFormClose();
+                navigate("/statistics");
+
             })
             .catch(e => {
                 if (e.message === "401") {
@@ -80,6 +84,7 @@ const DialogLogin = () => {
                 setEnableOk(true);
             });
     }
+
 
 
     return (

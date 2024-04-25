@@ -1,13 +1,14 @@
 import React, {useContext} from 'react';
 import {Avatar, Box, Divider, IconButton, ListItemIcon, Menu, MenuItem, Tooltip, Typography} from "@mui/material";
-import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import LogoutIcon from '@mui/icons-material/Logout';
 import {UserContext} from "../utils/userContext.js";
-import User from "../utils/User.js";
+import {useNavigate} from "react-router-dom";
 
 
 const MenuUserProfile = ({subMenu, setSubMenu, handleClick}) => {
     const {userProfile, setUserProfile, handleDialogProfile} = useContext(UserContext);
+
+    let navigate = useNavigate();
 
     return (
         <div className={".barSubMenu"}>
@@ -84,6 +85,7 @@ const MenuUserProfile = ({subMenu, setSubMenu, handleClick}) => {
                 <MenuItem
                     onClick={() => {
                         setUserProfile({user: null})
+                        navigate("/");
                     }
                     }>
                     <ListItemIcon>

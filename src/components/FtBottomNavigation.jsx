@@ -3,6 +3,7 @@ import {Box, Link, Stack, Typography} from "@mui/material";
 import {styleTopBottom} from "../utils/styles.js";
 import Glyph from "../images/Glyph.png";
 import LogoName from "../images/Logo Name.png";
+import {NavLink} from "react-router-dom";
 
 const FtBottomNavigation = () => {
 
@@ -25,12 +26,12 @@ const FtBottomNavigation = () => {
                 justifyContent: 'space-between',
                 alignItems: "center"
             }}>
-                <Link href="/">
+                <NavLink to="/">
                     <Box component="img" alt=">>" src={Glyph} sx={{mr: 1}}/>
-                </Link>
-                <Link href="/">
+                </NavLink>
+                <NavLink to="/">
                     <Box component="img" alt="StockStat" src={LogoName}/>
-                </Link>
+                </NavLink>
             </Stack>
         </Stack>
     );

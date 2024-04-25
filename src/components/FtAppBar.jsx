@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
     AppBar,
     Box,
-    Button, Link,
+    Button,
     Toolbar,
 } from "@mui/material";
 import LogoName from "../images/Logo Name.png";
@@ -11,6 +11,7 @@ import {UserContext} from "../utils/userContext.js";
 import {useContext} from "react";
 import MenuUserProfile from "./MenuUserProfile.jsx";
 import ButtonMainMenu from "./ButtonMainMenu.jsx";
+import {NavLink, useNavigate} from "react-router-dom";
 
 const mainMenuItems = ["Statistics", "Analytics", "Contacts"];
 
@@ -38,26 +39,36 @@ const FtAppBar = () => {
     };
 
 
+    let navigate = useNavigate();
+
     return (
 
         <AppBar position="static" sx={{background: "#04031C"}}>
             <Toolbar>
-                <Link href="/">
+                <NavLink to="/">
                     <Box component="img" alt=">>" src={Glyph} sx={{mr: 1}}/>
-                </Link>
-                <Link href="/">
+                </NavLink>
+                <NavLink to="/">
                     <Box component="img" alt="StockStat" src={LogoName}/>
-                </Link>
+                </NavLink>
 
                 <Box component="div" sx={{
                     flexGrow: 1, display: {xs: 'none', md: 'flex'},
                     justifyContent: "center"
                 }}>
-                    {mainMenuItems.map((item) => (
-                        <ButtonMainMenu key={item} href={"/" + item.toLowerCase()} sx={{ml: 4, mr: 4}}>
+
+
+
+                    {userProfile.user && mainMenuItems.map((item) => (
+                        <ButtonMainMenu key={item} onClick={() => {
+                            navigate("/" + item.toLowerCase())
+                        }}
+                                        sx={{ml: 4, mr: 4}}>
                             {item}
                         </ButtonMainMenu>
+
                     ))}
+
 
                 </Box>
 
@@ -72,7 +83,8 @@ const FtAppBar = () => {
                 </Button> : <MenuUserProfile
                     setSubMenu={setSubMenu}
                     subMenu={subMenu}
-                    handleClick={handleClick}/>
+                    handleClick={handleClick}
+                />
                 }
 
 

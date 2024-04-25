@@ -96,7 +96,7 @@ const Block5 = ({setStatistics}) => {
         }}>
             <Typography sx={{fontSize: "24px", fontWeight: "500"}}> Today’s Price Fluctuations </Typography>
             <StockLine/>
-            {setStatistics.map((set) => (<StockLine oneLine={set}/>))}
+            {setStatistics.map((set, i) => (<StockLine key={i} oneLine={set}/>))}
 
         </Stack>
     );

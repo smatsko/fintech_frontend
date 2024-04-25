@@ -12,9 +12,9 @@ const Main = () => {
     } = useContext(UserContext);
     return (
         <Routes>
-            <Route keys="statistics" path="/statistics" element={<Statistics/>}/>
-            <Route keys="analytics" path="/analytics" element={<Analytics/>}/>
-            <Route keys="contacts" path="/contacts" element={<Contacts/>}/>
+            {userProfile.user && <Route keys="statistics" path="/statistics" element={<Statistics/>}/>}
+            {userProfile.user &&<Route keys="analytics" path="/analytics" element={<Analytics/>}/>}
+            {userProfile.user &&<Route keys="contacts" path="/contacts" element={<Contacts/>}/>}
             <Route keys="def" path="*" element={<FirstPage/>}/>
         </Routes>
     )

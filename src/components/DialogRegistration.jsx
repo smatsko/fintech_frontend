@@ -1,16 +1,12 @@
 import React, {useContext, useState} from 'react';
-import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
 import {UserContext} from "../utils/userContext.js";
-import {Box, Button, FormHelperText, IconButton, Stack} from "@mui/material";
-import Glyph from "../images/Glyph.png";
+import {Box, Button, FormHelperText,  Stack} from "@mui/material";
 import {registerUser} from "../utils/accountActions.js";
 import MyTextField1 from "./MyTextField1.jsx";
 import MyEmailField, {checkEMail} from "./MyEmailField.jsx";
 import MyPasswordField, {checkPassword} from "./MyPasswordField.jsx";
-import CloseIcon from '@mui/icons-material/Close';
 import DialogHeader, {dialogPaperProps} from "./dialogCommon.jsx";
-import {t} from "../utils/constants.js";
 
 
 const DialogRegistration = () => {
@@ -64,16 +60,16 @@ const DialogRegistration = () => {
         e.preventDefault();
         setEnableOk(false)
         let tmp = {...formFields}
-        delete tmp.passwordagain;
+        delete tmp["passwordagain"];
 
         registerUser(tmp)
             .then(
                 response => {
-                    t(response);
-                    if (response.ok) return response.json();
-                    return response.json().then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
                         throw new Error(response.status);
-                    })
+                    }
                 }
             )
             .then(res => {
