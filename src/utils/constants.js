@@ -1,6 +1,6 @@
 import User from "./User.js";
 
-export const testUserOn = true;
+export const testUserOn = false;
 export const testUser = new User ("test@test.ru", "1234", "Piter", "Smith");
 
 export const t = msg => { if (testUserOn) console.log(msg); }

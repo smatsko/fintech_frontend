@@ -7,7 +7,7 @@ const Block1 = ({Text1, Text2}) => {
         <Box component="section" sx={{
             p: 3,
             borderRadius: "10px",
-            m: '20px',
+            mr: 4,
             backgroundColor: baseColor
         }}>
             <Typography sx={{fontSize: "12px", textTransform: "uppercase", opacity: "0.5"}}> {Text1} </Typography>

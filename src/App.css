@@ -2,19 +2,7 @@ html, body { height: 100% }
 * { margin: 0; padding: 0;}
 
 
-.mainpart {
-    display: flex;
-    height: calc(100vh - 64px);
-    color: white;
-    font-size: 48px;
-    background-image: url("./images/d6f61555025582efcc0b03c68ae791e1.jpeg");
-    box-sizing: border-box;
-}
-
-
 .bigtext {
-    font-family: "Inter", sans-serif;
-    font-style: normal ;
     font-size: 74px;
     font-weight: 800;
 }
