@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
     AppBar,
     Box,
-    Button,
+    Button, IconButton,
     Toolbar,
 } from "@mui/material";
 import LogoName from "../images/Logo Name.png";
@@ -12,6 +12,8 @@ import {useContext} from "react";
 import MenuUserProfile from "./MenuUserProfile.jsx";
 import ButtonMainMenu from "./ButtonMainMenu.jsx";
 import {NavLink, useNavigate} from "react-router-dom";
+import Brightness7TwoToneIcon from '@mui/icons-material/Brightness7TwoTone';
+import {isAdministrator} from "../utils/UserProfile.js";
 
 const mainMenuItems = ["Statistics", "Analytics", "Contacts"];
 
@@ -38,7 +40,6 @@ const FtAppBar = () => {
         }
     };
 
-
     let navigate = useNavigate();
 
     return (
@@ -58,7 +59,6 @@ const FtAppBar = () => {
                 }}>
 
 
-
                     {userProfile.user && mainMenuItems.map((item) => (
                         <ButtonMainMenu key={item} onClick={() => {
                             navigate("/" + item.toLowerCase())
@@ -71,6 +71,17 @@ const FtAppBar = () => {
 
 
                 </Box>
+
+
+                {isAdministrator(userProfile) &&
+                    < IconButton
+                        onClick={() => {
+                            navigate("/administrativepanel")
+                        }}>
+                        < Brightness7TwoToneIcon fontSize={"medium"} style={{color: 'white'}}/>
+                    </IconButton>
+                }
+
 
                 {!userProfile.user ? <Button
                     sx={styleSingIn}
