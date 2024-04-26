@@ -1,14 +1,13 @@
 import React, {createRef, useContext, useEffect, useState} from 'react';
 import {Box, Stack, Typography} from "@mui/material";
 import Scene01 from "../images/scene01.png";
-import {AppBarHeight, AppBottomBarHeight, prjStyles} from "../utils/styles.js";
+import {AppBottomBarHeight, prjStyles} from "../utils/styles.js";
 import {UserContext} from "../utils/userContext.js";
-import {NavLink, useNavigate} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 import VerticalAlignTopIcon from '@mui/icons-material/VerticalAlignTop';
 const FpPart4 = () => {
     const {screenSize} = useContext(UserContext);
     const refComp1 = createRef();
-    let navigate = useNavigate();
     const [minHeight, setMinHeight] = useState(screenSize - AppBottomBarHeight);
 
     useEffect(() => {
@@ -72,7 +71,7 @@ const FpPart4 = () => {
                             Link to file README on github
                         </Typography>
                     </Box>
-                    <Box component={"img"} src={Scene01} alt={"Scene01"} maxHeight="500px"
+                    <Box component={"img"} src={Scene01} alt={"Scene01"} maxHeight="450px"
                          sx={{m: 0, p: 0}}/>
 
                 </Stack>

@@ -68,7 +68,6 @@ const DialogLogin = () => {
                 )
 
                 .then(res => {
-                    console.log(res);
                     setUserProfile({token: createToken(formFields.login, formFields.password), user: res});
                     onFormClose();
                     navigate("/statistics");

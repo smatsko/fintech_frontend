@@ -1,7 +1,9 @@
 import {baseUrl, createToken} from "./constants.js";
+const thisUrl = baseUrl+"/account";
+
 
 export const registerUser = (user) => {
-    return fetch(`${baseUrl}/register`, {
+    return fetch(`${thisUrl}/register`, {
         method: 'Post',
         body: JSON.stringify(user),
         headers: {
@@ -11,7 +13,7 @@ export const registerUser = (user) => {
 }
 
 export const fetchUser = (login, password) => {
-    return fetch(`${baseUrl}/login`, {
+    return fetch(`${thisUrl}/login`, {
         method: 'Post',
         headers: {
             'Authorization': createToken(login, password)
@@ -20,7 +22,7 @@ export const fetchUser = (login, password) => {
 }
 
 export const changePassword = (login, oldPassword, newPassword) => {
-    return fetch(`${baseUrl}/user/password`, {
+    return fetch(`${thisUrl}/user/password`, {
         method: 'Put',
         headers: {
             'Authorization': createToken(login, oldPassword),
@@ -31,7 +33,7 @@ export const changePassword = (login, oldPassword, newPassword) => {
 
 
 export const updateUser = (login, token,  fields) => {
-    return fetch(`${baseUrl}/user/${login}`, {
+    return fetch(`${thisUrl}/user/${login}`, {
         method: 'Put',
         headers: {
             'Content-Type': 'application/json',

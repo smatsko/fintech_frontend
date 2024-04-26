@@ -6,8 +6,9 @@ export const isAdministrator = (userProfile) => {
 
 
 class UserProfile {
-    constructor( user) {
+    constructor( user, token) {
        this.user = user;
+       this.token = token;
     }
 
 }

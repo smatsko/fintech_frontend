@@ -34,7 +34,13 @@ export const prjStyles = {
         color: "white",
         alignItems:"center",
         justifyContent: "space-around"
+    },
+    AdminPage: {
+        background: "linear-gradient(174deg, #04031C -13.39%, #27296D 99.24%)",
+        color:"white",
+
     }
+
 }
 
 
