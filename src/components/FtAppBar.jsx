@@ -14,6 +14,7 @@ import ButtonMainMenu from "./ButtonMainMenu.jsx";
 import {NavLink, useNavigate} from "react-router-dom";
 import Brightness7TwoToneIcon from '@mui/icons-material/Brightness7TwoTone';
 import {isAdministrator} from "../utils/UserProfile.js";
+import {prjStyles} from "../utils/styles.js";
 
 const mainMenuItems = ["Statistics", "Analytics", "Contacts"];
 
@@ -44,7 +45,7 @@ const FtAppBar = () => {
 
     return (
 
-        <AppBar position="static" sx={{background: "#04031C"}}>
+        <AppBar id="top" position="static" sx={prjStyles.AppBar}>
             <Toolbar>
                 <NavLink to="/">
                     <Box component="img" alt=">>" src={Glyph} sx={{mr: 1}}/>

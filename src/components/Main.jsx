@@ -8,6 +8,7 @@ import {UserContext} from "../utils/userContext.js";
 import {isAdministrator} from "../utils/UserProfile.js";
 import AdministrativePanel from "./AdministrativePanel.jsx";
 
+
 const Main = () => {
     const {
         userProfile

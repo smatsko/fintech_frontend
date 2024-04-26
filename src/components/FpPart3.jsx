@@ -6,7 +6,7 @@ import GraphDemo1 from "../images/graph_demo1.png";
 
 const FpPart3 = () => {
     return (
-        <Grid container spacing={1} alignItems="center" style={prjStyles.fpPart4}>
+        <Grid container id="Statistics" spacing={1} alignItems="center" style={prjStyles.fpPart4}>
             <Grid item xs={12} sx={{mt:2}}></Grid>
             <Grid item xs={1}></Grid>
             <Grid item xs={5}>
