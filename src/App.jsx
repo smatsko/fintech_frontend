@@ -8,19 +8,20 @@ import {createToken, testUser, testUserOn} from "./utils/constants.js";
 import DialogProfile from "./components/DialogProfile.jsx";
 import Main from "./components/Main.jsx";
 import FtBottomNavigation from "./components/FtBottomNavigation.jsx";
-
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 
 
 const App = () => {
 
-   const [userProfile, setUserProfile] = React.useState(
+    const [userProfile, setUserProfile] = React.useState(
         new UserProfile(testUserOn ? testUser : null,
             testUserOn ? createToken(testUser.login, testUser.password) : null));
 
     const [dialogLogin, handleDialogLogin] = React.useState(false);
     const [dialogRegistration, handleDialogRegistration] = React.useState(false);
     const [dialogProfile, handleDialogProfile] = React.useState(false);
-    const [ screenSize, setScreenSize] = useState(window.innerHeight);
+    const [screenSize, setScreenSize] = useState(window.innerHeight);
 
     useEffect(() => {
         const handleResize = () => {
@@ -47,15 +48,16 @@ const App = () => {
             dialogProfile
         }}>
 
-            <div>
-                <FtAppBar/>
-                <Main/>
-                <FtBottomNavigation/>
-                {dialogLogin && <DialogLogin/>}
-                {dialogRegistration && <DialogRegistration/>}
-                {dialogProfile && <DialogProfile/>}
-            </div>
-
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <div>
+                    <FtAppBar/>
+                    <Main/>
+                    <FtBottomNavigation/>
+                    {dialogLogin && <DialogLogin/>}
+                    {dialogRegistration && <DialogRegistration/>}
+                    {dialogProfile && <DialogProfile/>}
+                </div>
+            </LocalizationProvider>
         </UserContext.Provider>
 
     );

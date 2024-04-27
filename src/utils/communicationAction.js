@@ -1,4 +1,4 @@
-import {baseUrl, createToken} from "./constants.js";
+import {baseUrl} from "./constants.js";
 const thisUrl = baseUrl + "/communication";
 
 export const getIndexes = (token) => {
@@ -11,3 +11,12 @@ export const getIndexes = (token) => {
     })
 }
 
+export const getIndexPeriod = (token, index) => {
+    return fetch(`${thisUrl}/index/${index}`, {
+        method: 'Get',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token,
+        },
+    })
+}

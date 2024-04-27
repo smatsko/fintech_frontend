@@ -1,17 +1,23 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {DataGrid} from '@mui/x-data-grid';
-import {Box, Container, Grid, Typography} from "@mui/material";
+import {Box, Grid, Typography} from "@mui/material";
 import {AppBarHeight, AppBottomBarHeight, prjStyles} from "../utils/styles.js";
 import {UserContext} from "../utils/userContext.js";
-import {createTheme, styled, ThemeProvider} from "@mui/material/styles";
-import {getIndexes} from "../utils/communicationAction.js";
-import {updateUser} from "../utils/accountActions.js";
+import {getIndexes, getIndexPeriod} from "../utils/communicationAction.js";
+
+import dayjs from "dayjs";
 
 
 const columns = [
-    {field: 'id', headerName: 'Code', width: 90, headerClassName: 'super-app-theme--header',}];
+    {field: 'id', headerName: 'Code', width: 90, },
+    {field: 'fromDate', headerName: 'Index From', width: 120,
+         valueFormatter: (params) => dayjs(params).format("DD/MMM/YYYY") },
+    {field: 'toDate', headerName: 'Index To', width: 120,
+        valueFormatter: (params) => dayjs(params).format("DD/MMM/YYYY")},
+];
 
 
+/*
 function customCheckbox(theme) {
     return {
         '& .MuiCheckbox-root svg': {
@@ -55,7 +61,9 @@ function customCheckbox(theme) {
         },
     };
 }
+*/
 
+/*
 
 const StyledDataGrid = styled(DataGrid)(({theme}) => ({
     border: 0,
@@ -100,6 +108,7 @@ const StyledDataGrid = styled(DataGrid)(({theme}) => ({
     },
     ...customCheckbox(theme),
 }));
+*/
 
 
 const AdministrativePanel = () => {
@@ -120,23 +129,43 @@ const AdministrativePanel = () => {
     const {userProfile} = useContext(UserContext);
 
     useEffect(() => {
-
-        getIndexes( userProfile.token)
-            .then(
-                response => {
-                    if (response.ok) return response.json();
-                    return response.json().then(response => {
-                        throw new Error(response.status);
-                    })
-                })
-            .then(res => {
-                setIndexes(res.reduce((mass, ind) => {mass.push({id: ind}); return mass}, []));
-            })
-            .catch(e => {
-            });
+        (async () => {
+            try {
+                let indexes = await getIndexes(userProfile.token)
+                    .then(
+                        res => {
+                            if (res.ok) return res.json();
+                            return res.json().then((res) => {
+                                throw new Error(res.status);
+                            })
+                        });
 
 
+                for (let i = 0; i < indexes.length; i++) {
+                    await getIndexPeriod(userProfile.token, indexes[i])
+                        .then(
+                            res => {
+                                if (res.ok) return res.json();
+                                return res.json().then((res) => {
+                                    throw new Error(res.status);
+                                })
+                            })
+                        .then((res) => {
+                            indexes[i] = {
+                                id: indexes[i],
+                                fromDate: dayjs(res["fromData"]).toDate(),
+                                toDate: dayjs(res["toData"]).toDate(),
 
+                            }
+                        });
+                }
+
+                setIndexes(indexes);
+            } catch {
+                setIndexes({});
+            }
+
+        })()
     }, []);
 
     return (
@@ -145,7 +174,7 @@ const AdministrativePanel = () => {
                 minHeight: `${screenSize - AppBottomBarHeight - AppBarHeight + 1}px`,
             }}>
             <Grid container>
-                <Grid item xs={12} sx={{mb:2}}></Grid>
+                <Grid item xs={12} sx={{mb: 2}}></Grid>
                 <Grid item xs={1}></Grid>
                 <Grid item xs={5}>
                     <DataGrid
@@ -160,7 +189,7 @@ const AdministrativePanel = () => {
                             },
                         }}
                         sx={{
-                            width: "35ch",
+                            width: "50ch",
                             background: "white",
                             color: "black",
                             "&.MuiDataGrid-root": {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {styleMainBody} from "../utils/styles.js";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 
@@ -19,12 +19,16 @@ import {ThemeProvider, createTheme} from '@mui/material/styles'
 import dayjs from "dayjs";
 import Block3 from "./Block3.jsx";
 import Block4 from "./Block4.jsx";
+import {getIndexes} from "../utils/communicationAction.js";
+import {UserContext} from "../utils/userContext.js";
 
 
 const Analytics = () => {
 
-    const [formFields, setFormFields] = React.useState({
-            stock: "APPL",
+    const {userProfile} = useContext(UserContext);
+    const [indexes, setIndexes] = useState([]);
+    const [formFields, setFormFields] = useState({
+            stock: "",
             to: dayjs(),
             from: dayjs().subtract(1, 'month'),
             days: dayjs().diff(dayjs().subtract(1, 'month'), "day"),
@@ -72,8 +76,27 @@ const Analytics = () => {
     };
 
 
+    useEffect(() => {
+        (async () => {
+            try {
+                let indexes = await getIndexes(userProfile.token)
+                    .then(
+                        res => {
+                            if (res.ok) return res.json();
+                            return res.json().then((res) => {
+                                throw new Error(res.status);
+                            })
+                        });
+
+                setIndexes(indexes);
+            } catch {
+                setIndexes({});
+            }
+        })()
+    }, []);
 
     const myLabeled = Element => (xLabel, xId = xLabel.toLowerCase()) => props => {
+
         return (
             <Box element="div" sx={{mr: 3}}>
                 <Typography>{xLabel}</Typography>
@@ -124,8 +147,10 @@ const Analytics = () => {
                                 {myLabeled(DatePicker)("From")({format: 'DD/MMM/YYYY'})}
                                 {myLabeled(DatePicker)("To")({format: 'DD/MMM/YYYY', minDate: formFields.from})}
                                 <MySelect>
-                                    <MenuItem value={"IBM"}>IBM</MenuItem>
-                                    <MenuItem value={"APPL"}>APPL</MenuItem>
+                                    { indexes.map((val)=>
+                                        <MenuItem key={val} value={val}>{val}</MenuItem>
+
+                                    )}
                                 </MySelect>
                                {myLabeled(TextField)("Period, days", "days")({
                                     type: "number",
