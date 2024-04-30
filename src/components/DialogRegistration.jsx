@@ -7,6 +7,7 @@ import MyTextField1 from "./MyTextField1.jsx";
 import MyEmailField, {checkEMail} from "./MyEmailField.jsx";
 import MyPasswordField, {checkPassword} from "./MyPasswordField.jsx";
 import DialogHeader, {dialogPaperProps} from "./dialogCommon.jsx";
+import {saveToStorage} from "../utils/UserProfile.js";
 
 
 const DialogRegistration = () => {
@@ -73,7 +74,8 @@ const DialogRegistration = () => {
                 }
             )
             .then(res => {
-                setUserProfile({user: res});
+                setUserProfile(saveToStorage(res, tmp.password));
+                //setUserProfile({user: res});
                 onFormClose();
             })
             .catch(e => {

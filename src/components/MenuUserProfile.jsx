@@ -3,6 +3,7 @@ import {Avatar, Box, Divider, IconButton, ListItemIcon, Menu, MenuItem, Tooltip,
 import LogoutIcon from '@mui/icons-material/Logout';
 import {UserContext} from "../utils/userContext.js";
 import {useNavigate} from "react-router-dom";
+import {logOut} from "../utils/UserProfile.js";
 
 
 const MenuUserProfile = ({subMenu, setSubMenu, handleClick}) => {
@@ -84,7 +85,7 @@ const MenuUserProfile = ({subMenu, setSubMenu, handleClick}) => {
 
                 <MenuItem
                     onClick={() => {
-                        setUserProfile({user: null})
+                        setUserProfile(logOut());
                         navigate("/");
                     }
                     }>

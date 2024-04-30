@@ -7,6 +7,7 @@ import MyPasswordField, {checkPassword} from "./MyPasswordField.jsx";
 import DialogHeader, {dialogPaperProps} from "./dialogCommon.jsx";
 import {createToken, t} from "../utils/constants.js";
 import {useNavigate} from "react-router-dom";
+import {saveToStorage} from "../utils/UserProfile.js";
 
 const DialogLogin = () => {
 
@@ -56,7 +57,7 @@ const DialogLogin = () => {
         const submitHandler = (e) => {
             e.preventDefault();
             setEnableOk(false)
-            fetchUser(formFields.login, formFields.password)
+            fetchUser( formFields.login, createToken(formFields.login, formFields.password))
                 .then(
                     response => {
                         if (response.ok) {
@@ -68,7 +69,8 @@ const DialogLogin = () => {
                 )
 
                 .then(res => {
-                    setUserProfile({token: createToken(formFields.login, formFields.password), user: res});
+                    setUserProfile(saveToStorage(res, formFields.password));
+                    //setUserProfile({token: createToken(formFields.login, formFields.password), user: res});
                     onFormClose();
                     navigate("/statistics");
 

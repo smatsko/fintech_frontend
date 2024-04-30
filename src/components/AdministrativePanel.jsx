@@ -1,11 +1,32 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {DataGrid} from '@mui/x-data-grid';
+import {DataGrid, useGridApiEventHandler, useGridApiRef} from '@mui/x-data-grid';
 import {Box, Grid, Typography} from "@mui/material";
 import {AppBarHeight, AppBottomBarHeight, prjStyles} from "../utils/styles.js";
 import {UserContext} from "../utils/userContext.js";
 import {getIndexes, getIndexPeriod} from "../utils/communicationAction.js";
 
 import dayjs from "dayjs";
+import Graph1 from "../../Graph1.jsx";
+
+
+const xData = [
+    {
+        name: dayjs().subtract(1, 'month').format("DD/MMM/YY") ,
+        AAPL: 2000,
+        GOLD: 1400,
+        amt: 2400,
+    },
+
+    {
+        name: dayjs().subtract(1, 'month').format("DD/MMM/YY") ,
+        AAPL: 4000,
+        GOLD: 2400,
+        amt: 2400,
+    },
+
+
+];
+
 
 
 const columns = [
@@ -112,9 +133,14 @@ const StyledDataGrid = styled(DataGrid)(({theme}) => ({
 
 
 const AdministrativePanel = () => {
+
+
+
     const {
         screenSize,
     } = useContext(UserContext);
+
+
 
     const DataGreedTitle = () => {
         return (
@@ -125,11 +151,19 @@ const AdministrativePanel = () => {
     }
 
     const [indexes, setIndexes] = useState([])
+    const [data, setData] = useState(xData)
+
 
     const {userProfile} = useContext(UserContext);
 
+    const apiRef = useGridApiRef();
+
+
     useEffect(() => {
+
+
         (async () => {
+
             try {
                 let indexes = await getIndexes(userProfile.token)
                     .then(
@@ -168,6 +202,14 @@ const AdministrativePanel = () => {
         })()
     }, []);
 
+
+    const onRowsSelectionHandler = (ids) => {
+        setData( data.length ? [] : xData);
+        console.log(ids);
+    };
+
+
+
     return (
         <Box component="div" style={prjStyles.AdminPage} sx={
             {
@@ -180,7 +222,8 @@ const AdministrativePanel = () => {
                     <DataGrid
                         columns={columns}
                         rows={indexes}
-                        disableMultipleRowSelection={true}
+                        disableMultipleRowSelection={false}
+                        onRowSelectionModelChange={(ids) => onRowsSelectionHandler(ids)}
                         initialState={{
                             pagination: {
                                 paginationModel: {
@@ -198,13 +241,19 @@ const AdministrativePanel = () => {
                         }}
                         slots={{toolbar: DataGreedTitle}}
                         pageSizeOptions={[5]}
+                        onSelectionModelChange={itm => console.log(itm)}
                         checkboxSelection
                         disableRowSelectionOnClick
                     />
 
 
                 </Grid>
-            </Grid>
+                <Grid item xs={6}>
+                    <Graph1 data={data}/>
+                </Grid>
+
+
+                </Grid>
 
         </Box>
     );

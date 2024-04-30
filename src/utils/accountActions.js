@@ -12,11 +12,11 @@ export const registerUser = (user) => {
     })
 }
 
-export const fetchUser = (login, password) => {
+export const fetchUser = (login, token) => {
     return fetch(`${thisUrl}/login`, {
         method: 'Post',
         headers: {
-            'Authorization': createToken(login, password)
+            'Authorization': token
         }
     })
 }
