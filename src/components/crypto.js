@@ -9,7 +9,6 @@ export const decryptAES = (encryptedBase64, key) => {
     const decrypted = CryptoJS["AES"].decrypt(encryptedBase64, key);
     if (decrypted) {
         try {
-            console.log(decrypted);
             const str = decrypted.toString(CryptoJS["enc"].Utf8);
             if (str.length > 0) {
                 return str;

@@ -14,6 +14,7 @@ import {fetchUser} from "./utils/accountActions.js";
 import {useNavigate} from "react-router-dom";
 
 
+
 const App = () => {
 
     const [userProfile, setUserProfile] = React.useState(
@@ -34,9 +35,9 @@ const App = () => {
         window.addEventListener('resize', handleResize);
 
         if (!userProfile.user) {
-            const  userProfile = loadFromStorage();
+            const userProfile = loadFromStorage();
             if (userProfile && userProfile.user) {
-                fetchUser( userProfile.user, userProfile.token)
+                fetchUser(userProfile.user, userProfile.token)
                     .then(
                         response => {
                             if (response.ok) {
@@ -44,15 +45,15 @@ const App = () => {
                             } else throw Error("")
                         }
                     )
-                    .then ( res => {
+                    .then(res => {
                         setUserProfile({user: res, token: userProfile.token});
                         navigate("/statistics");
                     })
-                    .catch (
-                        ()=> {
+                    .catch(
+                        () => {
                             setUserProfile(logOut());
-                            navigate("/");}
-
+                            navigate("/");
+                        }
                     );
             }
         }
@@ -81,14 +82,13 @@ const App = () => {
         }}>
 
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <div>
                     <FtAppBar/>
                     <Main/>
                     <FtBottomNavigation/>
                     {dialogLogin && <DialogLogin/>}
                     {dialogRegistration && <DialogRegistration/>}
                     {dialogProfile && <DialogProfile/>}
-                </div>
+
             </LocalizationProvider>
         </UserContext.Provider>
 

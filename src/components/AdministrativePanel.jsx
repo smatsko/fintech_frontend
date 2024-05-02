@@ -1,262 +1,142 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {DataGrid, useGridApiEventHandler, useGridApiRef} from '@mui/x-data-grid';
-import {Box, Grid, Typography} from "@mui/material";
+import {Box, Grid} from "@mui/material";
 import {AppBarHeight, AppBottomBarHeight, prjStyles} from "../utils/styles.js";
 import {UserContext} from "../utils/userContext.js";
-import {getIndexes, getIndexPeriod} from "../utils/communicationAction.js";
+import { getDataPeriodDays, getIndexes, getIndexPeriod} from "../utils/communicationAction.js";
 
 import dayjs from "dayjs";
-import Graph1 from "../../Graph1.jsx";
-
-
-const xData = [
-    {
-        name: dayjs().subtract(1, 'month').format("DD/MMM/YY") ,
-        AAPL: 2000,
-        GOLD: 1400,
-        amt: 2400,
-    },
-
-    {
-        name: dayjs().subtract(1, 'month').format("DD/MMM/YY") ,
-        AAPL: 4000,
-        GOLD: 2400,
-        amt: 2400,
-    },
-
-
-];
-
-
-
-const columns = [
-    {field: 'id', headerName: 'Code', width: 90, },
-    {field: 'fromDate', headerName: 'Index From', width: 120,
-         valueFormatter: (params) => dayjs(params).format("DD/MMM/YYYY") },
-    {field: 'toDate', headerName: 'Index To', width: 120,
-        valueFormatter: (params) => dayjs(params).format("DD/MMM/YYYY")},
-];
-
-
-/*
-function customCheckbox(theme) {
-    return {
-        '& .MuiCheckbox-root svg': {
-            width: 16,
-            height: 16,
-            backgroundColor: 'transparent',
-            border: `1px solid ${
-                theme.palette.mode === 'light' ? '#d9d9d9' : 'rgb(67, 67, 67)'
-            }`,
-            borderRadius: 2,
-        },
-        '& .MuiCheckbox-root svg path': {
-            display: 'none',
-        },
-        '& .MuiCheckbox-root.Mui-checked:not(.MuiCheckbox-indeterminate) svg': {
-            backgroundColor: '#1890ff',
-            borderColor: '#1890ff',
-        },
-        '& .MuiCheckbox-root.Mui-checked .MuiIconButton-label:after': {
-            position: 'absolute',
-            display: 'table',
-            border: '2px solid #fff',
-            borderTop: 0,
-            borderLeft: 0,
-            transform: 'rotate(45deg) translate(-50%,-50%)',
-            opacity: 1,
-            transition: 'all .2s cubic-bezier(.12,.4,.29,1.46) .1s',
-            content: '""',
-            top: '50%',
-            left: '39%',
-            width: 5.71428571,
-            height: 9.14285714,
-        },
-        '& .MuiCheckbox-root.MuiCheckbox-indeterminate .MuiIconButton-label:after': {
-            width: 8,
-            height: 8,
-            backgroundColor: '#1890ff',
-            transform: 'none',
-            top: '39%',
-            border: 0,
-        },
-    };
-}
-*/
-
-/*
-
-const StyledDataGrid = styled(DataGrid)(({theme}) => ({
-    border: 0,
-    color:
-        theme.palette.mode === 'light' ? 'rgba(0,0,0,.85)' : 'rgba(255,255,255,0.85)',
-    fontFamily: [
-        '-apple-system',
-        'BlinkMacSystemFont',
-        '"Segoe UI"',
-        'Roboto',
-        '"Helvetica Neue"',
-        'Arial',
-        'sans-serif',
-        '"Apple Color Emoji"',
-        '"Segoe UI Emoji"',
-        '"Segoe UI Symbol"',
-    ].join(','),
-    WebkitFontSmoothing: 'auto',
-    letterSpacing: 'normal',
-    '& .MuiDataGrid-columnsContainer': {
-        backgroundColor: theme.palette.mode === 'light' ? '#fafafa' : '#1d1d1d',
-    },
-    '& .MuiDataGrid-iconSeparator': {
-        display: 'none',
-    },
-    '& .MuiDataGrid-columnHeader, .MuiDataGrid-cell': {
-        borderRight: `1px solid ${
-            theme.palette.mode === 'light' ? '#f0f0f0' : '#303030'
-        }`,
-    },
-    '& .MuiDataGrid-columnsContainer, .MuiDataGrid-cell': {
-        borderBottom: `1px solid ${
-            theme.palette.mode === 'light' ? '#f0f0f0' : '#303030'
-        }`,
-    },
-    '& .MuiDataGrid-cell': {
-        color:
-            theme.palette.mode === 'light' ? 'rgba(0,0,0,.85)' : 'rgba(255,255,255,0.65)',
-    },
-    '& .MuiPaginationItem-root': {
-        borderRadius: 0,
-    },
-    ...customCheckbox(theme),
-}));
-*/
-
+import Graph1 from "./Graph1.jsx";
+import {Greed1} from "./Greed1.jsx";
 
 const AdministrativePanel = () => {
 
 
-
-    const {
-        screenSize,
-    } = useContext(UserContext);
-
+        const {
+            screenSize,
+        } = useContext(UserContext);
 
 
-    const DataGreedTitle = () => {
-        return (
-            <Box style={{width: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
-                <Typography>Loaded indexes</Typography>
-            </Box>
-        )
-    }
+        const [indexes, setIndexes] = useState([])
+        const [selectedIndexes, setSelectedIndexes] = useState([])
 
-    const [indexes, setIndexes] = useState([])
-    const [data, setData] = useState(xData)
+        const [data, setData] = useState([])
+        const {userProfile} = useContext(UserContext);
 
 
-    const {userProfile} = useContext(UserContext);
-
-    const apiRef = useGridApiRef();
+        useEffect(() => {
 
 
-    useEffect(() => {
+            (async () => {
 
-
-        (async () => {
-
-            try {
-                let indexes = await getIndexes(userProfile.token)
-                    .then(
-                        res => {
-                            if (res.ok) return res.json();
-                            return res.json().then((res) => {
-                                throw new Error(res.status);
-                            })
-                        });
-
-
-                for (let i = 0; i < indexes.length; i++) {
-                    await getIndexPeriod(userProfile.token, indexes[i])
+                try {
+                    let indexes = await getIndexes(userProfile.token)
                         .then(
                             res => {
                                 if (res.ok) return res.json();
                                 return res.json().then((res) => {
                                     throw new Error(res.status);
                                 })
-                            })
-                        .then((res) => {
-                            indexes[i] = {
-                                id: indexes[i],
-                                fromDate: dayjs(res["fromData"]).toDate(),
-                                toDate: dayjs(res["toData"]).toDate(),
+                            });
 
-                            }
-                        });
+
+                    for (let i = 0; i < indexes.length; i++) {
+                        await getIndexPeriod(userProfile.token, indexes[i])
+                            .then(
+                                res => {
+                                    if (res.ok) return res.json();
+                                    return res.json().then((res) => {
+                                        throw new Error(res.status);
+                                    })
+                                })
+                            .then((res) => {
+                                indexes[i] = {
+                                    id: indexes[i],
+                                    fromDate: res["fromData"],
+                                    toDate: res["toData"],
+
+                                }
+                            });
+                    }
+
+                    setIndexes(indexes);
+                } catch {
+                    setIndexes({});
                 }
 
-                setIndexes(indexes);
-            } catch {
-                setIndexes({});
+            })()
+        }, []);
+
+        const onRowsSelectionHandler = (ids) => {
+
+
+            if (!ids.length) {
+                setData([]);
+                setSelectedIndexes([]);
+                return;
+
             }
 
-        })()
-    }, []);
+            setSelectedIndexes(ids);
+
+            let fromDate = "999999999";
+            let toDate = "";
+
+            for( const vol of indexes) {
+                if (ids.includes(vol.id)) {
+                   if (fromDate > vol.fromDate) fromDate = vol.fromDate;
+                   if (toDate < vol.toDate) toDate = vol.toDate;
+                }
+            }
+
+            getDataPeriodDays(userProfile.token, ids, fromDate, toDate, 5)
+                 .then(
+                     res => {
+                         const xMap = new Map();
+                         res.map ((vol)=>{
+                             let tmp= xMap.get(vol.from) ?  xMap.get(vol.from) : {};
+                             tmp[vol.source] = +vol["startClose"];
+                             tmp["name"]=dayjs(vol.from).format("DD/MMM/YY")
+                             xMap.set (vol.from, tmp )
+                             tmp= xMap.get(vol.to) ?  xMap.get(vol.to) : {};
+                             tmp[vol.source] = +vol["endClose"];
+                             tmp["name"]=dayjs(vol.to).format("DD/MMM/YY")
+                             xMap.set (vol.to, tmp);
+                         });
+                         setData([... xMap.values()]);
+
+                     })
+                 .catch(
+                     () => {
+
+                     }
+                 );
+        };
 
 
-    const onRowsSelectionHandler = (ids) => {
-        setData( data.length ? [] : xData);
-        console.log(ids);
-    };
+        return (
+            <Box component="div" style={prjStyles.AdminPage} sx={
+                {
+                    minHeight: `${screenSize - AppBottomBarHeight - AppBarHeight + 1}px`,
+                }}>
+                <Grid container>
+                    <Grid item xs={12} sx={{mb: 2}}></Grid>
+                    <Grid item xs={1}></Grid>
+                    <Grid item xs={5}>
+                        <Greed1 xData={indexes}
+                                xOnSelect={onRowsSelectionHandler}
+                        />
 
-
-
-    return (
-        <Box component="div" style={prjStyles.AdminPage} sx={
-            {
-                minHeight: `${screenSize - AppBottomBarHeight - AppBarHeight + 1}px`,
-            }}>
-            <Grid container>
-                <Grid item xs={12} sx={{mb: 2}}></Grid>
-                <Grid item xs={1}></Grid>
-                <Grid item xs={5}>
-                    <DataGrid
-                        columns={columns}
-                        rows={indexes}
-                        disableMultipleRowSelection={false}
-                        onRowSelectionModelChange={(ids) => onRowsSelectionHandler(ids)}
-                        initialState={{
-                            pagination: {
-                                paginationModel: {
-                                    pageSize: 5,
-                                },
-                            },
-                        }}
-                        sx={{
-                            width: "50ch",
-                            background: "white",
-                            color: "black",
-                            "&.MuiDataGrid-root": {
-                                "--DataGrid-containerBackground": "white",
-                            }
-                        }}
-                        slots={{toolbar: DataGreedTitle}}
-                        pageSizeOptions={[5]}
-                        onSelectionModelChange={itm => console.log(itm)}
-                        checkboxSelection
-                        disableRowSelectionOnClick
-                    />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Graph1 data={data} indexes={selectedIndexes}/>
+                    </Grid>
 
 
                 </Grid>
-                <Grid item xs={6}>
-                    <Graph1 data={data}/>
-                </Grid>
 
-
-                </Grid>
-
-        </Box>
-    );
-};
+            </Box>
+        );
+    }
+;
 
 export default AdministrativePanel;
