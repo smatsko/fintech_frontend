@@ -24,7 +24,7 @@ const Graph1 = ({indexes, data}) => {
                 <Tooltip/>
                 <Legend/>
                 {indexes.map((ind, i) => (
-                        <Line type="monotone" dataKey={ind} stroke={
+                        <Line key={i} type="monotone" dataKey={ind} stroke={
                                  ["#8884d8", "#82ca9d", "#c94987"][i % 3]}
                               activeDot={{r: 3}}/>
                     )

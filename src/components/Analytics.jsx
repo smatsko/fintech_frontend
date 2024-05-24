@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {styleMainBody} from "../utils/styles.js";
+import {AppBarHeight, AppBottomBarHeight, styleMainBody} from "../utils/styles.js";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
@@ -14,27 +14,73 @@ import {
     Typography
 } from "@mui/material";
 import {DatePicker} from '@mui/x-date-pickers/DatePicker'
-import MyCurrencyField from "./MyCurrencyField.jsx";
 import {ThemeProvider, createTheme} from '@mui/material/styles'
 import dayjs from "dayjs";
 import Block3 from "./Block3.jsx";
-import Block4 from "./Block4.jsx";
-import {getIndexes} from "../utils/communicationAction.js";
+import {getDataPeriodDays, getIndexes} from "../utils/communicationAction.js";
 import {UserContext} from "../utils/userContext.js";
+import {dayjsToApi} from "../utils/constants.js";
 
 
 const Analytics = () => {
 
-    const {userProfile} = useContext(UserContext);
+    const {userProfile, screenSize,} = useContext(UserContext);
     const [indexes, setIndexes] = useState([]);
     const [formFields, setFormFields] = useState({
             stock: "",
             to: dayjs(),
             from: dayjs().subtract(1, 'month'),
-            days: dayjs().diff(dayjs().subtract(1, 'month'), "day"),
-            amount: "100"
+            days: 7,
+            amount: "1"
         }
     );
+
+    const [data, setData] = useState([]);
+    const [stat, setStat] = useState({});
+    const [graphParams, setGraphParam] = useState({});
+    const [minHeight, setMinHeight] = useState(screenSize - AppBarHeight);
+
+
+    const fetchData = async () => {
+        try {
+            console.log("-1", formFields.stock );
+            getDataPeriodDays(userProfile.token,
+                [formFields.stock],
+                dayjsToApi(formFields.from),
+                dayjsToApi(formFields.to),
+                formFields.days)
+                .then(res => {
+                    const xMap = new Map();
+                    res.map((vol) => {
+                        let tmp = xMap.get(vol.from) ? xMap.get(vol.from) : {};
+                        tmp["value"] = +vol["startClose"] * formFields.amount;
+                        tmp["date"] = dayjs(vol.from).format("DD/MMM/YY");
+                        xMap.set(vol.from, tmp)
+                        tmp = xMap.get(vol.to) ? xMap.get(vol.to) : {};
+                        tmp["value"] = +vol["endClose"] * formFields.amount;
+                        tmp["date"] = dayjs(vol.to).format("DD/MMM/YY")
+                        xMap.set(vol.to, tmp);
+                    });
+                    const xData = [...xMap.values()];
+                    const xStat = {
+                        start: xData.length > 0 ? xData[0].value : 0,
+                        end: xData.length > 0 ? xData[xData.length - 1].value : 0,
+                        min: xData.length > 0 ? xData[0].value : 0,
+                        max: xData.length > 0 ? xData[0].value : 0,
+                    }
+                    xData.forEach((x) => {
+                        if (x.value < xStat.min) xStat.min = x.value;
+                        if (x.value > xStat.max) xStat.max = x.value;
+                    })
+                    setStat(xStat);
+                    setData(xData);
+                })
+                .catch()
+        } catch {
+            console.log("here222")
+        }
+    }
+
 
     const theme = createTheme({
         components: {
@@ -57,26 +103,17 @@ const Analytics = () => {
         setFormFields(p);
     }
 
-    const handleFieldsChange = (e,fieldName) => {
+    const handleFieldsChange = (e, fieldName) => {
         let tmp = {...formFields};
-        if (fieldName === "from" || fieldName === "to" )
-        {
+        if (fieldName === "from" || fieldName === "to") {
             tmp[fieldName] = e;
-            if (tmp.to.diff ( tmp.from, "day") < 1) tmp.to = tmp.from.add( 1, "day")
-            tmp.days = tmp.to.diff( tmp.from, "day")
-        }
-
-        else tmp[fieldName] = e.target.value;
-
-
-        if (fieldName==="days") {
-            if (tmp.days < 1) tmp.days = 1;
-            tmp.to=tmp.from.add( tmp.days, "day");}
+        } else tmp[fieldName] = e.target.value;
         setFormFields(tmp);
     };
 
 
     useEffect(() => {
+
         (async () => {
             try {
                 let indexes = await getIndexes(userProfile.token)
@@ -92,7 +129,11 @@ const Analytics = () => {
             } catch {
                 setIndexes({});
             }
-        })()
+        })();
+
+        setMinHeight(Math.max(screenSize - AppBarHeight - AppBottomBarHeight));
+
+
     }, []);
 
     const myLabeled = Element => (xLabel, xId = xLabel.toLowerCase()) => props => {
@@ -103,9 +144,10 @@ const Analytics = () => {
                 <Element
                     id={xId}
                     onBlur={handleOnBlur}
-                    onChange={(e)=>{handleFieldsChange (e, xId)}}
+                    onChange={(e) => {
+                        handleFieldsChange(e, xId)
+                    }}
                     value={formFields[xId]}
-                    //              value = {formFields[xId] ? formFields[xId] : {}}
                     {...props} />
             </Box>
         )
@@ -119,7 +161,8 @@ const Analytics = () => {
 
 
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Grid container spacing={0} alignItems="center" sx={styleMainBody}>
+            <Grid container spacing={0} alignItems="center" sx={
+                {...styleMainBody, minHeight: `${minHeight}px`}}>
                 <Grid item xs={1}></Grid>
                 <Grid item xs={11} sx={{mb: 4, mt: 4}}>
                     <Typography sx={{
@@ -146,20 +189,29 @@ const Analytics = () => {
 
                                 {myLabeled(DatePicker)("From")({format: 'DD/MMM/YYYY'})}
                                 {myLabeled(DatePicker)("To")({format: 'DD/MMM/YYYY', minDate: formFields.from})}
-                                <MySelect>
-                                    { indexes.map((val)=>
-                                        <MenuItem key={val} value={val}>{val}</MenuItem>
 
-                                    )}
-                                </MySelect>
-                               {myLabeled(TextField)("Period, days", "days")({
+                                {myLabeled(TextField)("Period, days", "days")({
                                     type: "number",
                                     InputProps: {inputProps: {min: 1}}
                                 })}
 
+
+                                <MySelect>
+                                    {indexes.map((val) =>
+                                        <MenuItem key={val} value={val}>{val}</MenuItem>
+                                    )}
+                                </MySelect>
+
                                 {/*if (!/^[0-9\b]+$/.test(value)) return;
 */}
 
+                                {myLabeled(TextField)("Amount, units", "amount")({
+                                    type: "number",
+                                    InputProps: {inputProps: {min: 1}}
+                                })}
+
+
+                                {/*
                                 {myLabeled(MyCurrencyField)("Amount")({
                                     variant: "outlined",
                                     currencySymbol: "$",
@@ -168,18 +220,31 @@ const Analytics = () => {
                                     decimalCharacter: ".",
                                     digitGroupSeparator: ","
                                 })}
+*/}
 
                             </ThemeProvider>
 
 
                             <Button
                                 sx={{
+                                    mt: 3,
+                                    ml: 4,
                                     color: "white",
                                     background: "linear-gradient(269.97deg, #985076 -80.41%, #B81D6F -27.59%, #FE8745 100.7%)",
                                     borderRadius: "3px",
                                     fontWeight: "600",
                                     fontSize: "18px",
                                     boxShadow: "0px 1px 2px 0px rgba(16, 24, 40, 0.04)"
+                                }}
+                                disabled={
+                                    !(formFields.stock &&
+                                        formFields.to &&
+                                        formFields.from &&
+                                        formFields.days &&
+                                        formFields.amount)}
+                                onClick={() => {
+                                    setGraphParam(formFields);
+                                    fetchData();
                                 }}>
                                 &nbsp;&nbsp; CALCULATE &nbsp;&nbsp;
                             </Button>
@@ -188,29 +253,21 @@ const Analytics = () => {
                     </FormControl>
                 </Grid>
                 <Grid item xs={2}></Grid>
-                <Grid item xs={9} sx={{mt: 5}}> <Block3/> </Grid>
+
+                <Grid item xs={9} sx={{mt: 5}}>
+
+                    <Block3 graphParams={graphParams} stat={stat} data={data}/> </Grid>
+
                 <Grid item xs={2}></Grid>
+
                 <Grid item xs={4} sx={{mt: 5}}>
-                    <Block4 text1="APPL"
-                            text2="NasdaqGS - NasdaqGS Real Time Price."
-                            text3={`from ${formFields.from.format("DD/MMM/YYYY")} to ${formFields.to.format("DD/MMM/YYYY")}`}
-                            text4="157.66"
-                            text5="+0.26 (+0.2%)"
-                            text6="132.20"
-                            text7="161.30"/>
-                </Grid>
+                    {/*<Block4 graphParam = {graphParam}
+               */} </Grid>
                 <Grid item xs={1}></Grid>
-                <Grid item xs={4} sx={{mt: 5}}>
-                    <Block4 text1="GOLD"
-                            text2="COMEX - COMEX Delayed Price."
-                            text4="1,943.90"
-                            text5="-38.90 (-1.96%)"
-                            text6="1,726.25"
-                            text7="2002.10"/>
-                </Grid>
             </Grid>
         </LocalizationProvider>
-    );
+    )
+        ;
 }
 
 export default Analytics;

@@ -85,7 +85,9 @@ const Statistics = () => {
                     }}> Statistics </Typography>
                 </Grid>
                 <Grid item xs={1}></Grid>
+{/*
                 <Grid item xs={9} sx={{mt: 5}}> <Block3/> </Grid>
+*/}
                 <Grid item xs={12}></Grid>
                 <Grid item xs={1}></Grid>
                 <Grid item xs={4} sx={{mt: 5}}>

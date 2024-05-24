@@ -1,12 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Box, Grid} from "@mui/material";
+import {Box, Grid, TextField} from "@mui/material";
 import {AppBarHeight, AppBottomBarHeight, prjStyles} from "../utils/styles.js";
 import {UserContext} from "../utils/userContext.js";
-import { getDataPeriodDays, getIndexes, getIndexPeriod} from "../utils/communicationAction.js";
+import {getDataPeriodDays, getIndexes, getIndexPeriod} from "../utils/communicationAction.js";
 
 import dayjs from "dayjs";
 import Graph1 from "./Graph1.jsx";
 import {Greed1} from "./Greed1.jsx";
+import Graph2 from "./Graph2.jsx";
 
 const AdministrativePanel = () => {
 
@@ -81,35 +82,35 @@ const AdministrativePanel = () => {
             let fromDate = "999999999";
             let toDate = "";
 
-            for( const vol of indexes) {
+            for (const vol of indexes) {
                 if (ids.includes(vol.id)) {
-                   if (fromDate > vol.fromDate) fromDate = vol.fromDate;
-                   if (toDate < vol.toDate) toDate = vol.toDate;
+                    if (fromDate > vol.fromDate) fromDate = vol.fromDate;
+                    if (toDate < vol.toDate) toDate = vol.toDate;
                 }
             }
 
             getDataPeriodDays(userProfile.token, ids, fromDate, toDate, 5)
-                 .then(
-                     res => {
-                         const xMap = new Map();
-                         res.map ((vol)=>{
-                             let tmp= xMap.get(vol.from) ?  xMap.get(vol.from) : {};
-                             tmp[vol.source] = +vol["startClose"];
-                             tmp["name"]=dayjs(vol.from).format("DD/MMM/YY")
-                             xMap.set (vol.from, tmp )
-                             tmp= xMap.get(vol.to) ?  xMap.get(vol.to) : {};
-                             tmp[vol.source] = +vol["endClose"];
-                             tmp["name"]=dayjs(vol.to).format("DD/MMM/YY")
-                             xMap.set (vol.to, tmp);
-                         });
-                         setData([... xMap.values()]);
+                .then(
+                    res => {
+                        const xMap = new Map();
+                        res.map((vol) => {
+                            let tmp = xMap.get(vol.from) ? xMap.get(vol.from) : {};
+                            tmp[vol.source] = +vol["startClose"];
+                            tmp["name"] = dayjs(vol.from).format("DD/MMM/YY")
+                            xMap.set(vol.from, tmp)
+                            tmp = xMap.get(vol.to) ? xMap.get(vol.to) : {};
+                            tmp[vol.source] = +vol["endClose"];
+                            tmp["name"] = dayjs(vol.to).format("DD/MMM/YY")
+                            xMap.set(vol.to, tmp);
+                        });
+                        setData([...xMap.values()]);
 
-                     })
-                 .catch(
-                     () => {
+                    })
+                .catch(
+                    () => {
 
-                     }
-                 );
+                    }
+                );
         };
 
 
@@ -125,12 +126,15 @@ const AdministrativePanel = () => {
                         <Greed1 xData={indexes}
                                 xOnSelect={onRowsSelectionHandler}
                         />
-
                     </Grid>
                     <Grid item xs={6}>
+                    </Grid>
+                    <Grid item xs={6} sx={{minHeight:200, mt:5}}>
                         <Graph1 data={data} indexes={selectedIndexes}/>
                     </Grid>
-
+                    {/*<Grid item xs={6} sx={{minHeight:200, mt:5}}>
+                    </Grid>
+*/}
 
                 </Grid>
 
