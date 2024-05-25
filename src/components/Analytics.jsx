@@ -38,7 +38,7 @@ const Analytics = () => {
     const [data, setData] = useState([]);
     const [stat, setStat] = useState({});
     const [graphParams, setGraphParam] = useState({});
-    const [minHeight, setMinHeight] = useState(screenSize - AppBarHeight);
+    const [minHeight, setMinHeight] = useState(screenSize - AppBarHeight+1);
 
 
     const fetchData = async () => {
@@ -52,14 +52,14 @@ const Analytics = () => {
                 .then(res => {
                     const xMap = new Map();
                     res.map((vol) => {
-                        let tmp = xMap.get(vol.from) ? xMap.get(vol.from) : {};
+                        let tmp = xMap.get(vol.minDate) ? xMap.get(vol.minDate) : {};
                         tmp["value"] = +vol["startClose"] * formFields.amount;
-                        tmp["date"] = dayjs(vol.from).format("DD/MMM/YY");
-                        xMap.set(vol.from, tmp)
-                        tmp = xMap.get(vol.to) ? xMap.get(vol.to) : {};
+                        tmp["date"] = dayjs(vol.minDate).format("DD/MMM/YY");
+                        xMap.set(vol.minDate, tmp)
+                        tmp = xMap.get(vol.maxDate) ? xMap.get(vol.maxDate) : {};
                         tmp["value"] = +vol["endClose"] * formFields.amount;
-                        tmp["date"] = dayjs(vol.to).format("DD/MMM/YY")
-                        xMap.set(vol.to, tmp);
+                        tmp["date"] = dayjs(vol.maxDate).format("DD/MMM/YY")
+                        xMap.set(vol.maxDate, tmp);
                     });
                     const xData = [...xMap.values()];
                     const xStat = {
@@ -244,7 +244,7 @@ const Analytics = () => {
                                         formFields.amount)}
                                 onClick={() => {
                                     setGraphParam(formFields);
-                                    fetchData();
+                                    fetchData().then();
                                 }}>
                                 &nbsp;&nbsp; CALCULATE &nbsp;&nbsp;
                             </Button>

@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Box, Grid, TextField} from "@mui/material";
+import {Box, Grid} from "@mui/material";
 import {AppBarHeight, AppBottomBarHeight, prjStyles} from "../utils/styles.js";
 import {UserContext} from "../utils/userContext.js";
 import {getDataPeriodDays, getIndexes, getIndexPeriod} from "../utils/communicationAction.js";
@@ -7,7 +7,6 @@ import {getDataPeriodDays, getIndexes, getIndexPeriod} from "../utils/communicat
 import dayjs from "dayjs";
 import Graph1 from "./Graph1.jsx";
 import {Greed1} from "./Greed1.jsx";
-import Graph2 from "./Graph2.jsx";
 
 const AdministrativePanel = () => {
 
@@ -94,15 +93,16 @@ const AdministrativePanel = () => {
                     res => {
                         const xMap = new Map();
                         res.map((vol) => {
-                            let tmp = xMap.get(vol.from) ? xMap.get(vol.from) : {};
+                            let tmp = xMap.get(vol.minDate) ? xMap.get(vol.minDate) : {};
                             tmp[vol.source] = +vol["startClose"];
-                            tmp["name"] = dayjs(vol.from).format("DD/MMM/YY")
-                            xMap.set(vol.from, tmp)
-                            tmp = xMap.get(vol.to) ? xMap.get(vol.to) : {};
+                            tmp["name"] = dayjs(vol.minDate).format("DD/MMM/YY")
+                            xMap.set(vol.minDate, tmp)
+                            tmp = xMap.get(vol.maxDate) ? xMap.get(vol.maxDate) : {};
                             tmp[vol.source] = +vol["endClose"];
-                            tmp["name"] = dayjs(vol.to).format("DD/MMM/YY")
-                            xMap.set(vol.to, tmp);
+                            tmp["name"] = dayjs(vol.maxDate).format("DD/MMM/YY")
+                            xMap.set(vol.maxDate, tmp);
                         });
+                        console.log([...xMap.values()]);
                         setData([...xMap.values()]);
 
                     })

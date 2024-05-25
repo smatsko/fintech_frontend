@@ -2,11 +2,9 @@ import {
     Box, Grid, Stack,
     Typography
 } from "@mui/material";
-import React, {useContext, useEffect, useState} from "react";
+import React  from "react";
 import dayjs from "dayjs";
-import {UserContext} from "../utils/userContext.js";
 import Graph2 from "./Graph2.jsx";
-import {Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis} from "recharts";
 
 const Block3 = ({graphParams, stat, data}) => {
 
@@ -18,8 +16,8 @@ const Block3 = ({graphParams, stat, data}) => {
                 <Typography sx={{mr:2, opacity: "0.4", fontFamily: "Oxygen", fontWeight: "200"}}>{text}&nbsp;</Typography>
             );
 
-        const font2 = (text) => (
-            <Typography sx={{mr: 3,}}>{text}&nbsp;&nbsp;</Typography>
+        const font2 = (text ) => (
+            <Typography sx={{mr: 3}}>{text}&nbsp;&nbsp;</Typography>
         )
 
 
@@ -38,13 +36,13 @@ const Block3 = ({graphParams, stat, data}) => {
 
                 <Stack direction={"row"} sx={{}}>
                     {font1("At start, $")}
-                    {stat.start ? font2(stat.start.toFixed(2)) : "0.00"}
+                    {font2(stat.start ? stat.start.toFixed(2) : "0.00")}
                     {font1("High, $")}
-                    {stat.max ? font2(stat.max.toFixed(2)) : "0.00"  }
+                    {font2(stat.max ? stat.max.toFixed(2) : "0.00" ) }
                     {font1("Low, $")}
-                    {stat.min ? font2(stat.min.toFixed(2)) : "0.00" }
+                    {font2(stat.min ? stat.min.toFixed(2) : "0.00" )}
                     {font1("At end, $")}
-                    {stat.end ? font2(stat.end.toFixed(2)) : "0.00" }
+                    {font2(stat.end ? stat.end.toFixed(2) : "0.00" )}
                 </Stack>
                 <Typography>&nbsp;</Typography>
             </div>)

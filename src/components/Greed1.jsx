@@ -36,7 +36,7 @@ export const Greed1 = ({xData, xOnSelect}) => {
         <DataGrid
             columns={columns}
             rows={xData}
-            disableMultipleRowSelection={false}
+            disableMultipleRowSelection={true}
             onRowSelectionModelChange={(ids) => xOnSelect(ids)}
             initialState={{
                 pagination: {
